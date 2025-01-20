@@ -88,7 +88,3 @@ void AMultiplayerCharacter::LookUp(float Value)
 {
 	AddControllerPitchInput(Value);
 }
-
-//void AMultiplayerCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeaponUsed)
-//{
-//}

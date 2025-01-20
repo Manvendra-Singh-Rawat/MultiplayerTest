@@ -5,7 +5,7 @@
 #include "Weapon.generated.h"
 
 UENUM(BlueprintType)
-enum class WeaponState : uint8
+enum class EWeaponState : uint8
 {
 	EWS_Initial		UMETA(DisplayName = "Initial State"),
 	EWS_Equipped	UMETA(DisplayName = "Equipped"),
@@ -37,4 +37,16 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
 	class USphereComponent* AreaSphere;
+
+	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
+	EWeaponState WeaponState;
+
+	UPROPERTY(VisibleAnywhere, category = "Weapon Properties")
+	class UWidgetComponent* PickupWidget;
+
+protected:
+	UFUNCTION()
+	void OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION()
+	void OnExitOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 };

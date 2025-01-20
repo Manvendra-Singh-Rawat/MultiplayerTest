@@ -26,15 +26,9 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Character Defaults")
 	class UCameraComponent* Camera;
 
-	//UPROPERTY(ReplicatedUsing = OnRep_OverlappingWeapon)
-	//class AWeapon* OverlappingWeapon;
-
 protected:
 	void MoveForward(float Value);
 	void MoveRight(float Value);
 	void Turn(float Value);
 	void LookUp(float Value);
-
-	//UFUNCTION()
-	//void OnRep_OverlappingWeapon(AWeapon* LastWeaponUsed);
 };
