@@ -8,7 +8,7 @@ void ABattleTendencyGameMode::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
 
-	bUseSeamlessTravel = true;
+	//bUseSeamlessTravel = true;
 	PlayerCount = GameState.Get()->PlayerArray.Num();
 	if (PlayerCount >= 10)
 	{
