@@ -16,7 +16,7 @@ void ABattleTendencyGameMode::PostLogin(APlayerController* NewPlayer)
 		if (World != nullptr)
 		{
 			// After sufficient players have joined we will make everyone travel to new level
-			World->ServerTravel(FString("/Game/MyStuff/Maps/TestPlayableMap.umap"));
+			World->ServerTravel(FString("/Game/MyStuff/Maps/TestPlayableMap?listen"));
 		}
 	}
 }
