@@ -10,7 +10,7 @@ void ABattleTendencyGameMode::PostLogin(APlayerController* NewPlayer)
 
 	bUseSeamlessTravel = true;
 	PlayerCount = GameState.Get()->PlayerArray.Num();
-	if (PlayerCount >= 2)
+	if (PlayerCount >= 10)
 	{
 		UWorld* World = GetWorld();
 		if (World != nullptr)
