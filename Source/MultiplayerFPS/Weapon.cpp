@@ -1,7 +1,7 @@
 #include "Weapon.h"
-#include "Components/SphereComponent.h"
 #include "Components/WidgetComponent.h"
 #include "MultiplayerCharacter.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -73,8 +73,41 @@ void AWeapon::OnExitOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 
 void AWeapon::ShowPickupWidget(bool bShowWidget)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("ShowPickupWidget() called")));
 	if (PickupWidget != nullptr)
 	{
 		PickupWidget->SetVisibility(bShowWidget);
+	}
+}
+
+void AWeapon::SetWeaponState(EWeaponState NewWeaponState)
+{
+	WeaponState = NewWeaponState;
+
+	switch (WeaponState)
+	{
+	case EWeaponState::EWS_Equipped:
+		ShowPickupWidget(false);
+		AreaSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		break;
+	}
+}
+
+void AWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AWeapon, WeaponState);
+}
+
+void AWeapon::OnRep_WeaponState(EWeaponState NewWeaponState)
+{
+	WeaponState = NewWeaponState;
+
+	switch(WeaponState)
+	{
+	case EWeaponState::EWS_Equipped:
+		ShowPickupWidget(false);
+		break;
 	}
 }

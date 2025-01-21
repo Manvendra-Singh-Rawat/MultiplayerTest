@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/SphereComponent.h"
 #include "Weapon.generated.h"
 
 UENUM(BlueprintType)
@@ -38,10 +39,10 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
 	class USphereComponent* AreaSphere;
 
-	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
+	UPROPERTY(ReplicatedUsing = OnRep_WeaponState, VisibleAnywhere, Category = "Weapon Properties")
 	EWeaponState WeaponState;
 
-	UPROPERTY(VisibleAnywhere, category = "Weapon Properties")
+	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
 	class UWidgetComponent* PickupWidget;
 
 protected:
@@ -53,4 +54,14 @@ protected:
 public:
 	UFUNCTION()
 	void ShowPickupWidget(bool bShowWidget);
+
+	UFUNCTION()
+	void SetWeaponState(EWeaponState NewWeaponState);
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	UFUNCTION()
+	void OnRep_WeaponState(EWeaponState NewWeaponState);
+
+	FORCEINLINE USphereComponent* GetWeaponAreaSphere() const { return AreaSphere; };
 };

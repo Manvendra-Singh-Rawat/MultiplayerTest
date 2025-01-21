@@ -18,6 +18,7 @@ protected:
 public:	
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void PostInitializeComponents() override;
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Character Defaults")
@@ -29,14 +30,19 @@ private:
 	UPROPERTY(ReplicatedUsing = OnRep_OverlappingWeapon)
 	class AWeapon* OverlappingWeapon;
 
+	UPROPERTY(VisibleANywhere, Category = "Weapon Properties")
+	class UCombatComponent* Combat;
+
 protected:
 	void MoveForward(float Value);
 	void MoveRight(float Value);
 	void Turn(float Value);
 	void LookUp(float Value);
 
-	//UFUNCTION()
-	//void OnRep_OverlappingWeapon(AWeapon* LastWeaponOverlapped);
+	void EquipButtonPressed();
+
+	UFUNCTION(Server, Reliable)
+	void ServerEquipButtonPressed();
 
 public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;

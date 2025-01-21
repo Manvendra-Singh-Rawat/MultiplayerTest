@@ -7,6 +7,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Weapon.h"
 #include "Net/UnrealNetwork.h"
+#include "CombatComponent.h"
 
 // Sets default values
 AMultiplayerCharacter::AMultiplayerCharacter()
@@ -22,6 +23,10 @@ AMultiplayerCharacter::AMultiplayerCharacter()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
 	Camera->bUsePawnControlRotation = false;
+
+	// Components are not needed to be registered for replication
+	Combat = CreateDefaultSubobject<UCombatComponent>(TEXT("Combat Comp"));
+	Combat->SetIsReplicated(true);
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 }
@@ -44,13 +49,30 @@ void AMultiplayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	// Movement
 	PlayerInputComponent->BindAxis("MoveForward", this, &ThisClass::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRIght", this, &ThisClass::MoveRight);
+
+	// Looking
 	PlayerInputComponent->BindAxis("Turn", this, &ThisClass::Turn);
 	PlayerInputComponent->BindAxis("LookUp", this, &ThisClass::LookUp);
 
+	// Jump action
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+
+	// Equip
+	PlayerInputComponent->BindAction("Equip", IE_Pressed, this, &ThisClass::EquipButtonPressed);
+	//PlayerInputComponent->BindAction("Equip", IE_Released, this, &ThisClass::);
+}
+
+void AMultiplayerCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	if (Combat != nullptr)
+	{
+		Combat->Character = this;
+	}
 }
 
 void AMultiplayerCharacter::MoveForward(float Value)
@@ -89,6 +111,29 @@ void AMultiplayerCharacter::LookUp(float Value)
 	AddControllerPitchInput(Value);
 }
 
+void AMultiplayerCharacter::EquipButtonPressed()
+{
+	if (Combat != nullptr)
+	{
+		if (HasAuthority())
+		{
+			Combat->EquipWeapon(OverlappingWeapon);
+		}
+		else
+		{
+			ServerEquipButtonPressed();
+		}
+	}
+}
+
+void AMultiplayerCharacter::ServerEquipButtonPressed_Implementation()
+{
+	if (Combat != nullptr)
+	{
+		Combat->EquipWeapon(OverlappingWeapon);
+	}
+}
+
 void AMultiplayerCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -112,14 +157,15 @@ void AMultiplayerCharacter::SetOverlappingWeapon(AWeapon* Weapon)
 	}
 }
 
-void AMultiplayerCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeaponUsed)
+void AMultiplayerCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeaponOverlapped)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("OnRep_OverlappingWeapon() called")));
 	if (OverlappingWeapon != nullptr)
 	{
 		OverlappingWeapon->ShowPickupWidget(true);
 	}
-	if (LastWeaponUsed != nullptr)
+	if (LastWeaponOverlapped != nullptr)
 	{
-		LastWeaponUsed->ShowPickupWidget(false);
+		LastWeaponOverlapped->ShowPickupWidget(false);
 	}
 }
