@@ -22,8 +22,12 @@ public:
 
 private:
 	AMultiplayerCharacter* Character;
+	UPROPERTY(Replicated)
 	class AWeapon* EquippedWeapon;
 
 public:
 	void EquipWeapon(AWeapon* WeaponToEquip);
+
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };

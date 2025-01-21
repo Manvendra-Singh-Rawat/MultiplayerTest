@@ -169,3 +169,8 @@ void AMultiplayerCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeaponOverlappe
 		LastWeaponOverlapped->ShowPickupWidget(false);
 	}
 }
+
+bool AMultiplayerCharacter::IsWeaponEquipped()
+{
+	return (Combat != nullptr && Combat->EquippedWeapon != nullptr) ? true : false;
+}

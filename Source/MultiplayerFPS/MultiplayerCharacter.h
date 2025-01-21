@@ -49,4 +49,6 @@ public:
 	void SetOverlappingWeapon(AWeapon* Weapon);
 	UFUNCTION()
 	void OnRep_OverlappingWeapon(AWeapon* LastWeaponUsed);
+
+	bool IsWeaponEquipped();
 };
