@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Weapon.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 AMultiplayerCharacter::AMultiplayerCharacter()
@@ -36,7 +37,6 @@ void AMultiplayerCharacter::BeginPlay()
 void AMultiplayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input
@@ -87,4 +87,39 @@ void AMultiplayerCharacter::Turn(float Value)
 void AMultiplayerCharacter::LookUp(float Value)
 {
 	AddControllerPitchInput(Value);
+}
+
+void AMultiplayerCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME_CONDITION(AMultiplayerCharacter, OverlappingWeapon, COND_OwnerOnly);
+}
+
+void AMultiplayerCharacter::SetOverlappingWeapon(AWeapon* Weapon)
+{
+	if (OverlappingWeapon != nullptr)
+	{
+		OverlappingWeapon->ShowPickupWidget(false);
+	}
+	OverlappingWeapon = Weapon;
+	if (IsLocallyControlled())
+	{
+		if (OverlappingWeapon != nullptr)
+		{
+			OverlappingWeapon->ShowPickupWidget(true);
+		}
+	}
+}
+
+void AMultiplayerCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeaponUsed)
+{
+	if (OverlappingWeapon != nullptr)
+	{
+		OverlappingWeapon->ShowPickupWidget(true);
+	}
+	if (LastWeaponUsed != nullptr)
+	{
+		LastWeaponUsed->ShowPickupWidget(false);
+	}
 }

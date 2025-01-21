@@ -8,7 +8,10 @@ void ABattleTendencyGameMode::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
 
-	//bUseSeamlessTravel = true;
+	// Don't use bUseSeamlessTravel on the map where you are tryingto connect to a server
+	// as seamless travel means it won't disconnect from the current server so you will remain on the same IP
+	bUseSeamlessTravel = true;
+
 	PlayerCount = GameState.Get()->PlayerArray.Num();
 	if (PlayerCount >= 10)
 	{

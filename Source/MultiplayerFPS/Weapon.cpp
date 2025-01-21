@@ -7,7 +7,9 @@
 AWeapon::AWeapon()
 {
 	PrimaryActorTick.bCanEverTick = false;
-	//bReplicates = true;
+
+	// bReplicates means it will replicate on the server
+	bReplicates = true;
 
 	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Weapon Mesh"));
 	WeaponMesh->SetupAttachment(RootComponent);
@@ -38,11 +40,11 @@ void AWeapon::BeginPlay()
 
 		AreaSphere->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnBeginOverlap);
 		AreaSphere->OnComponentEndOverlap.AddDynamic(this, &ThisClass::OnExitOverlap);
+	}
 
-		if (PickupWidget != nullptr)
-		{
-			PickupWidget->SetVisibility(false);
-		}
+	if (PickupWidget != nullptr)
+	{
+		PickupWidget->SetVisibility(false);
 	}
 }
 
@@ -56,10 +58,7 @@ void AWeapon::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 	AMultiplayerCharacter* PlayerCharacter = Cast<AMultiplayerCharacter>(OtherActor);
 	if (PlayerCharacter != nullptr)
 	{
-		if (GEngine != nullptr)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, FString::Printf(TEXT("Player character collided")));
-		}
+		PlayerCharacter->SetOverlappingWeapon(this);
 	}
 }
 
@@ -68,9 +67,14 @@ void AWeapon::OnExitOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 	AMultiplayerCharacter* PlayerCharacter = Cast<AMultiplayerCharacter>(OtherActor);
 	if (PlayerCharacter != nullptr)
 	{
-		if (GEngine != nullptr)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, FString::Printf(TEXT("Player character exited")));
-		}
+		PlayerCharacter->SetOverlappingWeapon(nullptr);
+	}
+}
+
+void AWeapon::ShowPickupWidget(bool bShowWidget)
+{
+	if (PickupWidget != nullptr)
+	{
+		PickupWidget->SetVisibility(bShowWidget);
 	}
 }
