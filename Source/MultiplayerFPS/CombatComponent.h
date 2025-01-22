@@ -25,11 +25,15 @@ private:
 	UPROPERTY(Replicated)
 	class AWeapon* EquippedWeapon;
 
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	bool bIsAiming{ false };
 
 public:
 	void EquipWeapon(AWeapon* WeaponToEquip);
+	void SetIsAiming(bool Value);
+
+	UFUNCTION(Server, Reliable)
+	void ServerSetIsAiming(bool Value);
 
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;

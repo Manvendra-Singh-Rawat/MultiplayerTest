@@ -39,11 +39,14 @@ protected:
 	void Turn(float Value);
 	void LookUp(float Value);
 
+	// Equip weapon button pressed
 	void EquipButtonPressed();
 	UFUNCTION(Server, Reliable)
 	void ServerEquipButtonPressed();
 
 	void CrouchButtonPressed();
+
+	// Aim down sight (ADS) button press/release
 	void ADSButtonPressed();
 	void ADSButtonReleased();
 

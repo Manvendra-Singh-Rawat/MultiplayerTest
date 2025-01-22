@@ -3,6 +3,7 @@
 #include "MultiplayerCharacter.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Net/UnrealNetwork.h"
+#include "MultiplayerCharacter.h"
 
 UCombatComponent::UCombatComponent()
 {
@@ -38,9 +39,21 @@ void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
 	EquippedWeapon->SetOwner(Character);
 }
 
+void UCombatComponent::SetIsAiming(bool Value)
+{
+	bIsAiming = Value;
+	ServerSetIsAiming(Value);
+}
+
+void UCombatComponent::ServerSetIsAiming_Implementation(bool Value)
+{
+	bIsAiming = Value;
+}
+
 void UCombatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(UCombatComponent, EquippedWeapon);
+	DOREPLIFETIME(UCombatComponent, bIsAiming);
 }

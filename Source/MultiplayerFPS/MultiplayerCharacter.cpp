@@ -156,12 +156,14 @@ void AMultiplayerCharacter::CrouchButtonPressed()
 
 void AMultiplayerCharacter::ADSButtonPressed()
 {
-
+	if (Combat == nullptr) return;
+	Combat->SetIsAiming(true);
 }
 
 void AMultiplayerCharacter::ADSButtonReleased()
 {
-
+	if (Combat == nullptr) return;
+	Combat->SetIsAiming(false);
 }
 
 void AMultiplayerCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -207,5 +209,5 @@ bool AMultiplayerCharacter::IsWeaponEquipped()
 
 bool AMultiplayerCharacter::IsAiming()
 {
-	return Combat != nullptr && Combat->bIsAiming == true) ? true : false;
+	return (Combat != nullptr && Combat->bIsAiming == true) ? true : false;
 }
