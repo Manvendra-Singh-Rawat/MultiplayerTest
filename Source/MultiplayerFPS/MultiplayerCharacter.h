@@ -40,9 +40,12 @@ protected:
 	void LookUp(float Value);
 
 	void EquipButtonPressed();
-
 	UFUNCTION(Server, Reliable)
 	void ServerEquipButtonPressed();
+
+	void CrouchButtonPressed();
+	void ADSButtonPressed();
+	void ADSButtonReleased();
 
 public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
@@ -51,4 +54,5 @@ public:
 	void OnRep_OverlappingWeapon(AWeapon* LastWeaponUsed);
 
 	bool IsWeaponEquipped();
+	bool IsAiming();
 };

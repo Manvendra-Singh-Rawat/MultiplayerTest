@@ -28,8 +28,8 @@ void UMultiplayerCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds
 	Speed = Velocity.Length();
 
 	bInAir = PlayerCharacter->GetCharacterMovement()->IsFalling();
-
 	bIsAccelerating = PlayerCharacter->GetCharacterMovement()->GetCurrentAcceleration().Length() > 0 ? true : false;
-
 	bWeaponEquipped = PlayerCharacter->IsWeaponEquipped();
+	bIsCrouched = PlayerCharacter->bIsCrouched;
+	bIsAiming = PlayerCharacter->IsAiming();
 }

@@ -64,6 +64,14 @@ void AMultiplayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 	// Equip
 	PlayerInputComponent->BindAction("Equip", IE_Pressed, this, &ThisClass::EquipButtonPressed);
 	//PlayerInputComponent->BindAction("Equip", IE_Released, this, &ThisClass::);
+
+	// Crouch
+	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &ThisClass::CrouchButtonPressed);
+	//PlayerInputComponent->BindAction("Crouch", IE_Released, this, &ThisClass::);
+
+	// Aim Down Sight
+	PlayerInputComponent->BindAction("AimDownSight", IE_Pressed, this, &ThisClass::ADSButtonPressed);
+	PlayerInputComponent->BindAction("AimDownSight", IE_Released, this, &ThisClass::ADSButtonReleased);
 }
 
 void AMultiplayerCharacter::PostInitializeComponents()
@@ -134,6 +142,28 @@ void AMultiplayerCharacter::ServerEquipButtonPressed_Implementation()
 	}
 }
 
+void AMultiplayerCharacter::CrouchButtonPressed()
+{
+	if (bIsCrouched == false)
+	{
+		Crouch();
+	}
+	else if (bIsCrouched == true)
+	{
+		UnCrouch();
+	}
+}
+
+void AMultiplayerCharacter::ADSButtonPressed()
+{
+
+}
+
+void AMultiplayerCharacter::ADSButtonReleased()
+{
+
+}
+
 void AMultiplayerCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -173,4 +203,9 @@ void AMultiplayerCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeaponOverlappe
 bool AMultiplayerCharacter::IsWeaponEquipped()
 {
 	return (Combat != nullptr && Combat->EquippedWeapon != nullptr) ? true : false;
+}
+
+bool AMultiplayerCharacter::IsAiming()
+{
+	return Combat != nullptr && Combat->bIsAiming == true) ? true : false;
 }

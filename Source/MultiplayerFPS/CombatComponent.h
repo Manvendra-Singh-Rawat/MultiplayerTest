@@ -25,6 +25,9 @@ private:
 	UPROPERTY(Replicated)
 	class AWeapon* EquippedWeapon;
 
+	UPROPERTY()
+	bool bIsAiming{ false };
+
 public:
 	void EquipWeapon(AWeapon* WeaponToEquip);
 
